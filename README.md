@@ -6,6 +6,10 @@ Open Agent Hackathon 2026 · Track 02 *“The Agent That Can Explain Why”* · 
 
 **Live demo (recorded runs):** https://jimmywangjimmy.github.io/agentid-trust-desk/
 
+**Demo video (2:22):** https://jimmywangjimmy.github.io/agentid-trust-desk/media/trust-desk-demo.mp4 · **Slides (PDF):** https://jimmywangjimmy.github.io/agentid-trust-desk/media/AgentID-Trust-Desk-deck.pdf
+
+![demo](docs/media/trust-desk-demo.gif)
+
 ---
 
 ## The problem
@@ -125,6 +129,10 @@ ZETARIS_REAL=1 npm run demo
    - The router uses Meterless first and falls back to NVIDIA **only on transport failure**. An HTTP error from Meterless is surfaced, never re-routed. All of this is covered by tests against a contract stub (`test/meterless.test.ts`).
    - **Honest status:** Nightshift (the Meterless Runtime app) ships for macOS/Windows and our build box is Linux. The recorded runs therefore show `primary_unconfigured` → NVIDIA in their routing log.
    - To route through Meterless, run Nightshift, then either `npm run meterless:detect` or paste the connect link into `METERLESS_CONNECT_LINK`.
+
+## How Cursor was used
+
+The code was written during the hackathon window by an AI coding agent running on Cursor's agent platform, directed and reviewed by the author. It covered scaffolding the TypeScript project, the tools, the Meterless provider (written against the provider-contract document), the tests, the Zetaris simulator and the Pages viewer. Every recorded run was produced by executing the code. Nothing in `docs/runs/` was hand-written.
 
 ## NVIDIA
 
