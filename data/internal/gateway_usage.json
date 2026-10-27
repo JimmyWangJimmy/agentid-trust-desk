@@ -1,0 +1,37 @@
+{
+  "dataset": "gateway_usage",
+  "description": "API gateway aggregates for each agent's sandbox key.",
+  "notice": "SYNTHETIC demo data for the fictional company 'Northwind Freight'. Not real customers, tickets or vendors. Wallet addresses are the real public Monad-testnet addresses used by the AgentID demo agents.",
+  "records": [
+    {
+      "agent_name": "GoodBot",
+      "usage_window": "2026-10-01..2026-10-26",
+      "requests": 18452,
+      "error_rate": 0.004,
+      "out_of_scope_calls": 0,
+      "pii_fields_requested": 0,
+      "rate_limit_hits": 2,
+      "scopes": "tracking:read"
+    },
+    {
+      "agent_name": "FakeBot",
+      "usage_window": "2026-10-11..2026-10-26",
+      "requests": 1310,
+      "error_rate": 0.31,
+      "out_of_scope_calls": 214,
+      "pii_fields_requested": 38,
+      "rate_limit_hits": 57,
+      "scopes": "tracking:read"
+    },
+    {
+      "agent_name": "SybilBot",
+      "usage_window": "2026-10-19..2026-10-26",
+      "requests": 96,
+      "error_rate": 0.02,
+      "out_of_scope_calls": 0,
+      "pii_fields_requested": 0,
+      "rate_limit_hits": 0,
+      "scopes": "refunds:sandbox"
+    }
+  ]
+}

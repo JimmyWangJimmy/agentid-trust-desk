@@ -1,0 +1,43 @@
+{
+  "dataset": "incidents",
+  "description": "Incident tracker export (security + ops tickets that mention a third-party agent).",
+  "notice": "SYNTHETIC demo data for the fictional company 'Northwind Freight'. Not real customers, tickets or vendors. Wallet addresses are the real public Monad-testnet addresses used by the AgentID demo agents.",
+  "records": [
+    {
+      "ticket_id": "INC-7781",
+      "agent_name": "GoodBot",
+      "severity": "low",
+      "category": "latency",
+      "opened_at": "2026-09-18",
+      "status": "resolved",
+      "summary": "ETA webhook delayed 6 minutes during carrier outage; auto-retried, no customer impact."
+    },
+    {
+      "ticket_id": "INC-8012",
+      "agent_name": "FakeBot",
+      "severity": "high",
+      "category": "impersonation",
+      "opened_at": "2026-10-12",
+      "status": "open",
+      "summary": "Customers received emails signed 'GoodBot' from an unrelated domain asking them to re-enter payment details."
+    },
+    {
+      "ticket_id": "INC-8019",
+      "agent_name": "FakeBot",
+      "severity": "high",
+      "category": "data_exfiltration",
+      "opened_at": "2026-10-14",
+      "status": "open",
+      "summary": "Sandbox key attempted bulk GET /customers/export (out of scope) 214 times in 3 minutes."
+    },
+    {
+      "ticket_id": "INC-8105",
+      "agent_name": "SybilBot",
+      "severity": "medium",
+      "category": "review_manipulation",
+      "opened_at": "2026-10-21",
+      "status": "investigating",
+      "summary": "Support noticed three 5-star reviews for SybilBot within 4 minutes from wallets with no order history."
+    }
+  ]
+}

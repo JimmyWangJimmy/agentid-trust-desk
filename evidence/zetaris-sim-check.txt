@@ -1,0 +1,31 @@
+Zetaris REST: http://127.0.0.1:8898/api/v1.0
+
+SELECT agent_name, kyb_status, declared_owner_wallet FROM trustdesk.vendor_registry
+  engine=zetaris-sim 50ms
+┌─────────┬────────────┬────────────┬──────────────────────────────────────────────┐
+│ (index) │ agent_name │ kyb_status │ declared_owner_wallet                        │
+├─────────┼────────────┼────────────┼──────────────────────────────────────────────┤
+│ 0       │ 'GoodBot'  │ 'verified' │ '0xe713f7750a9dfbd2ca091ad75d77229786c73f41' │
+│ 1       │ 'FakeBot'  │ 'failed'   │ '0xe713f7750a9dfbd2ca091ad75d77229786c73f41' │
+│ 2       │ 'SybilBot' │ 'pending'  │ '0x15de4089d3fbe78d384b817e45eac69d4a45d9cb' │
+└─────────┴────────────┴────────────┴──────────────────────────────────────────────┘
+
+SELECT agent_name, count(*) AS n FROM trustdesk.incidents GROUP BY agent_name
+  engine=zetaris-sim 5ms
+┌─────────┬────────────┬───┐
+│ (index) │ agent_name │ n │
+├─────────┼────────────┼───┤
+│ 0       │ 'FakeBot'  │ 2 │
+│ 1       │ 'GoodBot'  │ 1 │
+│ 2       │ 'SybilBot' │ 1 │
+└─────────┴────────────┴───┘
+
+SELECT name, agent_uri FROM trustdesk.agent_cards
+  engine=zetaris-sim 5ms
+┌─────────┬────────────┬───────────────────────────────────────────────────────────────┐
+│ (index) │ name       │ agent_uri                                                     │
+├─────────┼────────────┼───────────────────────────────────────────────────────────────┤
+│ 0       │ 'GoodBot'  │ 'https://talentos-ai.github.io/AgentID/agents/good-bot.json'  │
+│ 1       │ 'FakeBot'  │ 'https://talentos-ai.github.io/AgentID/agents/fake-bot.json'  │
+│ 2       │ 'SybilBot' │ 'https://talentos-ai.github.io/AgentID/agents/sybil-bot.json' │
+└─────────┴────────────┴───────────────────────────────────────────────────────────────┘

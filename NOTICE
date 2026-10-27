@@ -1,0 +1,9 @@
+AgentID Trust Desk
+Copyright (c) 2026 Jimmy Wang. Licensed under MIT (see LICENSE).
+
+This product includes software from the Meterless project, licensed under the Apache License 2.0:
+- src/engines/hmem/        H-MEM reference implementation (unmodified copy)
+- vendor/hmem-conformance/ H-MEM conformance runner and vectors
+See src/engines/hmem/LICENSE for the full Apache-2.0 text.
+
+SQL patterns in sql/zetaris/ follow the examples in zetaris/getting-started.

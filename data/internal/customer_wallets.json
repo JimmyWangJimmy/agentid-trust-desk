@@ -1,0 +1,35 @@
+{
+  "dataset": "customer_wallets",
+  "description": "CRM export: wallets of customers with real order history (used to tell genuine reviewers from fresh wallets).",
+  "notice": "SYNTHETIC demo data for the fictional company 'Northwind Freight'. Not real customers, tickets or vendors. Wallet addresses are the real public Monad-testnet addresses used by the AgentID demo agents.",
+  "records": [
+    {
+      "wallet": "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+      "customer_id": "C-1042",
+      "segment": "enterprise",
+      "first_order": "2025-03-14",
+      "orders_90d": 41
+    },
+    {
+      "wallet": "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+      "customer_id": "C-2210",
+      "segment": "mid-market",
+      "first_order": "2025-09-02",
+      "orders_90d": 17
+    },
+    {
+      "wallet": "0xf3c4490ddd771488b147c1f3da56885d6ad485cf",
+      "customer_id": "C-3307",
+      "segment": "smb",
+      "first_order": "2026-01-20",
+      "orders_90d": 9
+    },
+    {
+      "wallet": "0x9a1e0c8c3b5d2f6e7a8b9c0d1e2f3a4b5c6d7e8f",
+      "customer_id": "C-4120",
+      "segment": "smb",
+      "first_order": "2026-05-05",
+      "orders_90d": 3
+    }
+  ]
+}

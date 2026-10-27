@@ -1,0 +1,30 @@
+{
+  "name": "agentid-trust-desk",
+  "version": "0.1.0",
+  "description": "The agent that explains why you should (or should not) trust another AI agent. AgentID on-chain reputation + Zetaris-federated internal data + Meterless H-MEM case memory + NVIDIA Nemotron via Meterless Runtime.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "zetaris:sim": "tsx src/zetaris/sim-server.ts",
+    "zetaris:sql": "tsx scripts/gen-lightning-sql.ts",
+    "zetaris:check": "tsx scripts/zetaris-check.ts",
+    "meterless:detect": "tsx scripts/meterless-detect.ts",
+    "investigate": "tsx src/cli.ts",
+    "demo": "tsx scripts/demo-all.ts",
+    "test": "vitest run",
+    "conformance:hmem": "HMEM_IMPL=$PWD/src/engines/hmem/index.ts tsx vendor/hmem-conformance/runner.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "sql.js": "^1.11.0",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/sql.js": "^1.4.9",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

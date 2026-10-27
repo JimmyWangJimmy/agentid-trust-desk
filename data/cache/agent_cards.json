@@ -1,0 +1,23 @@
+[
+  {
+    "name": "GoodBot",
+    "description": "Helpful coding assistant with diverse, high-trust attesters on AgentID (EigenTrust-lite). Raw and weighted reputation both stay high on Monad testnet.",
+    "active": true,
+    "x402_support": false,
+    "agent_uri": "https://talentos-ai.github.io/AgentID/agents/good-bot.json"
+  },
+  {
+    "name": "FakeBot",
+    "description": "Impersonation / spam agent. Low scores from trusted reviewers — raw and weighted reputation stay toxic.",
+    "active": true,
+    "x402_support": false,
+    "agent_uri": "https://talentos-ai.github.io/AgentID/agents/fake-bot.json"
+  },
+  {
+    "name": "SybilBot",
+    "description": "Sockpuppet-ring demo. Fresh wallets give 5★ so raw average looks fine (4.00); AgentID trust-weighted score collapses (1.22) because attesters have no earned trust.",
+    "active": true,
+    "x402_support": false,
+    "agent_uri": "https://talentos-ai.github.io/AgentID/agents/sybil-bot.json"
+  }
+]
