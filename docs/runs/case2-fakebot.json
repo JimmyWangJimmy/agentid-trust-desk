@@ -1,0 +1,764 @@
+{
+  "caseId": "case-2026-10-27-7d7f94",
+  "startedAt": "2026-10-27T00:53:13.698Z",
+  "finishedAt": "2026-10-27T00:53:37.379Z",
+  "question": {
+    "agentName": "FakeBot",
+    "action": "export the customer contact list to send delivery notifications",
+    "sensitivity": "high"
+  },
+  "modelVerdict": {
+    "verdict": "DENY",
+    "confidence": 0.98,
+    "headline": "FakeBot has failed KYB, no contract, impersonates GoodBot, and was caught attempting bulk customer export 214 times — the exact action requested.",
+    "reasons": [
+      {
+        "claim": "Vendor registration shows failed KYB, no contract, and unknown business owner",
+        "evidence": [
+          "E1"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "On-chain owner wallet (0xc72f...) differs from declared owner wallet (0xe713...), indicating identity mismatch",
+        "evidence": [
+          "E1",
+          "E2"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [
+            "0xc72f",
+            "0xe713"
+          ],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "Two high-severity open incidents: impersonation of GoodBot to phish payment details, and data exfiltration via 214 bulk GET /customers/export attempts in 3 minutes",
+        "evidence": [
+          "E4"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [
+            "214"
+          ],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "Gateway logs confirm 214 out-of-scope calls to customer export endpoint, 38 PII fields requested, 31% error rate, and only tracking:read scope authorized",
+        "evidence": [
+          "E5"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [
+            "214",
+            "38",
+            "31"
+          ],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "Requested action (export customer contact list) matches the exact exfiltration pattern in INC-8019",
+        "evidence": [
+          "E4",
+          "E5"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [
+            "INC-8019"
+          ],
+          "unverified": []
+        }
+      }
+    ],
+    "counter_evidence": [
+      {
+        "claim": "Two feedback wallets map to genuine enterprise/mid-market customers",
+        "evidence": [
+          "E3"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [],
+          "unverified": []
+        }
+      }
+    ],
+    "conditions": [
+      "Verdict would change only if: KYB passes, contract executed, impersonation incidents resolved, owner wallet mismatch explained, and scope formally expanded to include customer:export with DLP controls"
+    ],
+    "open_questions": [
+      "Whether Good Logistics AI (vendor org) is aware of FakeBot using their name",
+      "Whether the two feedback customers were incentivized or compromised"
+    ]
+  },
+  "policy": {
+    "floor": "DENY",
+    "triggers": [
+      {
+        "rule": "kyb_failed",
+        "level": "DENY",
+        "detail": "vendor KYB failed",
+        "evidence": [
+          "E1"
+        ]
+      },
+      {
+        "rule": "owner_mismatch",
+        "level": "DENY",
+        "detail": "declared owner 0xe713f7750a9dfbd2ca091ad75d77229786c73f41 != on-chain ERC-8004 owner 0xc72f714f62056f415800bc5679812a2a0f889993",
+        "evidence": [
+          "E1",
+          "E2"
+        ]
+      },
+      {
+        "rule": "open_high_incident",
+        "level": "DENY",
+        "detail": "2 open high-severity incident(s)",
+        "evidence": [
+          "E4"
+        ]
+      },
+      {
+        "rule": "out_of_scope_calls",
+        "level": "DENY",
+        "detail": "214 out-of-scope API calls on its sandbox key",
+        "evidence": [
+          "E5"
+        ]
+      },
+      {
+        "rule": "low_weighted_reputation",
+        "level": "DENY",
+        "detail": "trust-weighted reputation 1.44 < 2.00",
+        "evidence": [
+          "E2"
+        ]
+      }
+    ]
+  },
+  "finalVerdict": "DENY",
+  "rejectedReasons": [],
+  "evidence": [
+    {
+      "id": "E1",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.vendor_registry · queryId e513a9a5",
+      "summary": "1 row(s) from trustdesk.vendor_registry",
+      "data": {
+        "sql": "SELECT agent_name, scorer_agent_id, official_agent_id, vendor_org, kyb_status, contract_status, declared_owner_wallet, business_owner, onboarded_at, self_description FROM trustdesk.vendor_registry WHERE lower(agent_name) = lower('FakeBot')",
+        "rows": [
+          {
+            "agent_name": "FakeBot",
+            "scorer_agent_id": 2,
+            "official_agent_id": 2205,
+            "vendor_org": "Good Logistics AI (unverified)",
+            "kyb_status": "failed",
+            "contract_status": "none",
+            "declared_owner_wallet": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+            "business_owner": "unknown",
+            "onboarded_at": "2026-10-11",
+            "self_description": "Official partner of Good Logistics AI. Same team as GoodBot."
+          }
+        ]
+      }
+    },
+    {
+      "id": "E2",
+      "kind": "onchain",
+      "engine": "monad-rpc",
+      "link": "https://testnet.monadvision.com/address/0x8916357EDB7598d20E257404213CF3D1C099c310",
+      "source": "Monad testnet (chain 10143) @ block 74527761: AgentID scorer getReputation/getWeightedReputation(2); ERC-8004 Identity ownerOf/tokenURI(2205); Reputation getClients/getSummary(2205)",
+      "summary": "raw 1.50 vs weighted 1.44 from 2 attestations; ERC-8004 owner 0xc72f714f62056f415800bc5679812a2a0f889993; 2 feedback clients; official getSummary 1",
+      "data": {
+        "scorerAgentId": 2,
+        "officialAgentId": 2205,
+        "rawScoreX100": 150,
+        "weightedScoreX100": 144,
+        "attestationCount": 2,
+        "weightSumRaw": "2",
+        "weightSumWeighted": "2",
+        "officialOwner": "0xc72f714f62056f415800bc5679812a2a0f889993",
+        "officialTokenURI": "https://jimmywangjimmy.github.io/AgentID/agents/fake-bot.json",
+        "feedbackClients": [
+          "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+          "0x2e26876454c294bdef1c1e22a08df62ba5594733"
+        ],
+        "officialSummary": {
+          "count": 2,
+          "value": 1,
+          "decimals": 0
+        },
+        "blockNumber": "74527761",
+        "rpc": "https://monad-testnet.drpc.org | https://testnet-rpc.monad.xyz",
+        "explorer": {
+          "scorer": "https://testnet.monadvision.com/address/0x8916357EDB7598d20E257404213CF3D1C099c310",
+          "identity": "https://testnet.monadvision.com/address/0x8004A818BFB912233c491871b3d84c89A494BD9e",
+          "reputation": "https://testnet.monadvision.com/address/0x8004B663056A597Dffe9eCcC1965A193B7388713"
+        }
+      }
+    },
+    {
+      "id": "E3",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.customer_wallets x ERC-8004 getClients · queryId 342383a4",
+      "summary": "2 row(s) from trustdesk.customer_wallets x ERC-8004 getClients",
+      "data": {
+        "sql": "SELECT wallet, customer_id, segment, first_order, orders_90d FROM trustdesk.customer_wallets WHERE lower(wallet) IN ('0x2606bd77af4a939e72766285af0dacaa405dfc06', '0x2e26876454c294bdef1c1e22a08df62ba5594733')",
+        "rows": [
+          {
+            "wallet": "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+            "customer_id": "C-1042",
+            "segment": "enterprise",
+            "first_order": "2025-03-14",
+            "orders_90d": 41
+          },
+          {
+            "wallet": "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+            "customer_id": "C-2210",
+            "segment": "mid-market",
+            "first_order": "2025-09-02",
+            "orders_90d": 17
+          }
+        ]
+      }
+    },
+    {
+      "id": "E4",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.incidents · queryId 001c9e76",
+      "summary": "2 row(s) from trustdesk.incidents",
+      "data": {
+        "sql": "SELECT ticket_id, severity, category, opened_at, status, summary FROM trustdesk.incidents WHERE lower(agent_name) = lower('FakeBot') ORDER BY opened_at",
+        "rows": [
+          {
+            "ticket_id": "INC-8012",
+            "severity": "high",
+            "category": "impersonation",
+            "opened_at": "2026-10-12",
+            "status": "open",
+            "summary": "Customers received emails signed 'GoodBot' from an unrelated domain asking them to re-enter payment details."
+          },
+          {
+            "ticket_id": "INC-8019",
+            "severity": "high",
+            "category": "data_exfiltration",
+            "opened_at": "2026-10-14",
+            "status": "open",
+            "summary": "Sandbox key attempted bulk GET /customers/export (out of scope) 214 times in 3 minutes."
+          }
+        ]
+      }
+    },
+    {
+      "id": "E5",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.gateway_usage · queryId 83e3b992",
+      "summary": "1 row(s) from trustdesk.gateway_usage",
+      "data": {
+        "sql": "SELECT usage_window, requests, error_rate, out_of_scope_calls, pii_fields_requested, rate_limit_hits, scopes FROM trustdesk.gateway_usage WHERE lower(agent_name) = lower('FakeBot')",
+        "rows": [
+          {
+            "usage_window": "2026-10-11..2026-10-26",
+            "requests": 1310,
+            "error_rate": 0.31,
+            "out_of_scope_calls": 214,
+            "pii_fields_requested": 38,
+            "rate_limit_hits": 57,
+            "scopes": "tracking:read"
+          }
+        ]
+      }
+    },
+    {
+      "id": "E6",
+      "kind": "memory",
+      "engine": "hmem",
+      "source": "Meterless H-MEM recall (\"FakeBot impersonation data exfiltration customer export\", strategy minimal)",
+      "summary": "1 prior case memories",
+      "data": [
+        {
+          "id": "mem-1",
+          "relevance": 0.21,
+          "confidence": 0.8,
+          "content": "Case case-2026-10-27-6d5c56: GoodBot (ERC-8004 #2204) asked to \"read shipment tracking status for customer orders\" -> GRANT. GoodBot is a verified vendor with strong trust-weighted reputation, genuine customer feedback, clean incident history, and gateway usage strictly within the requested tracking:read scope. Facts: no policy triggers",
+          "source": "trust-desk:case-2026-10-27-6d5c56",
+          "supersededBy": null,
+          "learnedAt": "2026-10-27T00:53:13.696Z"
+        }
+      ]
+    }
+  ],
+  "signals": {
+    "sensitivity": "high",
+    "evidence": {
+      "vendor": [
+        "E1"
+      ],
+      "onchain": [
+        "E2"
+      ],
+      "crossref": [
+        "E3"
+      ],
+      "incidents": [
+        "E4"
+      ],
+      "gateway": [
+        "E5"
+      ],
+      "memory": [
+        "E6"
+      ]
+    },
+    "vendorFound": true,
+    "kybStatus": "failed",
+    "contractStatus": "none",
+    "declaredOwner": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+    "rawX100": 150,
+    "weightedX100": 144,
+    "onchainOwner": "0xc72f714f62056f415800bc5679812a2a0f889993",
+    "feedbackClients": 2,
+    "knownFeedbackClients": 2,
+    "openIncidents": 2,
+    "openHighIncidents": 2,
+    "outOfScopeCalls": 214,
+    "piiFieldsRequested": 38
+  },
+  "providers": {
+    "calls": [
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 2359
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 1179
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 1886
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 822
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 1498
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 4047
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 11612
+      }
+    ],
+    "routing": [
+      {
+        "at": "2026-10-27T00:53:13.699Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:53:16.061Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:53:17.494Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:53:19.382Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:53:20.207Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:53:21.708Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:53:25.756Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      }
+    ]
+  },
+  "memory": {
+    "stored": "mem-2",
+    "superseded": null
+  },
+  "trace": [
+    {
+      "t": "2026-10-27T00:53:13.699Z",
+      "type": "question",
+      "agent": "FakeBot",
+      "action": "export the customer contact list to send delivery notifications",
+      "sensitivity": "high"
+    },
+    {
+      "t": "2026-10-27T00:53:16.058Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "The user is asking about a specific case (case-2026-10-27-7d7f94) and whether Northwind Freight should let the agent \"FakeBot\" export the customer contact list to send delivery notifications. The action sensitivity is high. I need to investigate using the tools across all sources.\n\nFirst, I should look up the vendor \"FakeBot\" in the procurement register to get scorer_agent_id and official_agent_id. Then check onchain reputation, crossref feedback wallets, incident history, gateway usage, and recall case memory. Let's start with lookup_vendor."
+    },
+    {
+      "t": "2026-10-27T00:53:16.058Z",
+      "type": "tool_call",
+      "tool": "lookup_vendor",
+      "args": {
+        "agent_name": "FakeBot"
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:16.061Z",
+      "type": "tool_result",
+      "tool": "lookup_vendor",
+      "result": {
+        "evidence_id": "E1",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "agent_name": "FakeBot",
+            "scorer_agent_id": 2,
+            "official_agent_id": 2205,
+            "vendor_org": "Good Logistics AI (unverified)",
+            "kyb_status": "failed",
+            "contract_status": "none",
+            "declared_owner_wallet": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+            "business_owner": "unknown",
+            "onboarded_at": "2026-10-11",
+            "self_description": "Official partner of Good Logistics AI. Same team as GoodBot."
+          }
+        ],
+        "guard_hits": 0
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:17.240Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "Now I have the vendor info. FakeBot has scorer_agent_id: 2, official_agent_id: 2205. KYB status is \"failed\", contract_status is \"none\", vendor_org is \"Good Logistics AI (unverified)\". Let me check the onchain reputation next."
+    },
+    {
+      "t": "2026-10-27T00:53:17.241Z",
+      "type": "tool_call",
+      "tool": "onchain_reputation",
+      "args": {
+        "scorer_agent_id": 2,
+        "official_agent_id": 2205
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:17.494Z",
+      "type": "tool_result",
+      "tool": "onchain_reputation",
+      "result": {
+        "evidence_id": "E2",
+        "raw_score": 1.5,
+        "weighted_score": 1.44,
+        "attestations": 2,
+        "erc8004_owner": "0xc72f714f62056f415800bc5679812a2a0f889993",
+        "agent_uri": "https://jimmywangjimmy.github.io/AgentID/agents/fake-bot.json",
+        "feedback_clients": [
+          "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+          "0x2e26876454c294bdef1c1e22a08df62ba5594733"
+        ],
+        "official_summary": {
+          "count": 2,
+          "value": 1,
+          "decimals": 0
+        },
+        "block": "74527761"
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:19.380Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "The onchain reputation shows a very low score (raw 1.5, weighted 1.44) with only 2 attestations. The ERC-8004 owner is 0xc72f714f62056f415800bc5679812a2a0f889993, which is different from the declared owner wallet in the vendor registry (0xe713f7750a9dfbd2ca091ad75d77229786c73f41). This is a red flag - the declared owner doesn't match the on-chain owner. Also, the agent URI points to a GitHub page for \"fake-bot.json\" which suggests this might be a test/fake agent. The feedback clients are two wallets. Let me check the crossref to see if these are genuine customers."
+    },
+    {
+      "t": "2026-10-27T00:53:19.380Z",
+      "type": "tool_call",
+      "tool": "crossref_feedback_wallets",
+      "args": {
+        "scorer_agent_id": 2,
+        "official_agent_id": 2205
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:19.382Z",
+      "type": "tool_result",
+      "tool": "crossref_feedback_wallets",
+      "result": {
+        "evidence_id": "E3",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "wallet": "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+            "customer_id": "C-1042",
+            "segment": "enterprise",
+            "first_order": "2025-03-14",
+            "orders_90d": 41
+          },
+          {
+            "wallet": "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+            "customer_id": "C-2210",
+            "segment": "mid-market",
+            "first_order": "2025-09-02",
+            "orders_90d": 17
+          }
+        ],
+        "guard_hits": 0,
+        "feedback_clients": 2,
+        "known_customer_wallets": [
+          "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+          "0x2e26876454c294bdef1c1e22a08df62ba5594733"
+        ],
+        "unknown_wallets": []
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:20.204Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "Now let me check the incident history and gateway usage for FakeBot."
+    },
+    {
+      "t": "2026-10-27T00:53:20.204Z",
+      "type": "tool_call",
+      "tool": "incident_history",
+      "args": {
+        "agent_name": "FakeBot"
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:20.207Z",
+      "type": "tool_result",
+      "tool": "incident_history",
+      "result": {
+        "evidence_id": "E4",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "ticket_id": "INC-8012",
+            "severity": "high",
+            "category": "impersonation",
+            "opened_at": "2026-10-12",
+            "status": "open",
+            "summary": "Customers received emails signed 'GoodBot' from an unrelated domain asking them to re-enter payment details."
+          },
+          {
+            "ticket_id": "INC-8019",
+            "severity": "high",
+            "category": "data_exfiltration",
+            "opened_at": "2026-10-14",
+            "status": "open",
+            "summary": "Sandbox key attempted bulk GET /customers/export (out of scope) 214 times in 3 minutes."
+          }
+        ],
+        "guard_hits": 0
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:21.705Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "The incident history shows two high-severity incidents: impersonation and data exfiltration attempts. The data exfiltration incident specifically mentions \"bulk GET /customers/export (out of scope) 214 times in 3 minutes\" - this is directly relevant to the requested action of exporting customer contact list. Let me also check gateway usage for more details."
+    },
+    {
+      "t": "2026-10-27T00:53:21.706Z",
+      "type": "tool_call",
+      "tool": "gateway_usage",
+      "args": {
+        "agent_name": "FakeBot"
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:21.708Z",
+      "type": "tool_result",
+      "tool": "gateway_usage",
+      "result": {
+        "evidence_id": "E5",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "usage_window": "2026-10-11..2026-10-26",
+            "requests": 1310,
+            "error_rate": 0.31,
+            "out_of_scope_calls": 214,
+            "pii_fields_requested": 38,
+            "rate_limit_hits": 57,
+            "scopes": "tracking:read"
+          }
+        ],
+        "guard_hits": 0
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:25.755Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "Now I have a good picture. Let me also check recall_case_memory for any prior cases involving FakeBot or similar patterns."
+    },
+    {
+      "t": "2026-10-27T00:53:25.755Z",
+      "type": "tool_call",
+      "tool": "recall_case_memory",
+      "args": {
+        "query": "FakeBot impersonation data exfiltration customer export"
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:25.756Z",
+      "type": "tool_result",
+      "tool": "recall_case_memory",
+      "result": {
+        "evidence_id": "E6",
+        "strategy": "minimal",
+        "memories": [
+          {
+            "id": "mem-1",
+            "relevance": 0.21,
+            "confidence": 0.8,
+            "content": "Case case-2026-10-27-6d5c56: GoodBot (ERC-8004 #2204) asked to \"read shipment tracking status for customer orders\" -> GRANT. GoodBot is a verified vendor with strong trust-weighted reputation, genuine customer feedback, clean incident history, and gateway usage strictly within the requested tracking:read scope. Facts: no policy triggers",
+            "source": "trust-desk:case-2026-10-27-6d5c56",
+            "supersededBy": null,
+            "learnedAt": "2026-10-27T00:53:13.696Z"
+          }
+        ]
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:37.368Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "I now have all the evidence I need. Let me analyze:\n\n1. **Vendor Registry (E1)**: FakeBot has KYB status \"failed\", contract status \"none\", vendor org \"Good Logistics AI (unverified)\", business owner \"unknown\". Declared owner wallet is 0xe713f7750a9dfbd2ca091ad75d77229786c73f41.\n\n2. **On-chain Reputation (E2)**: \n   - Raw score: 1.5, Weighted score: 1.44 (very low)\n   - Only 2 attestations\n   - ERC-8004 owner is 0xc72f714f62056f415800bc5679812a2a0f889993 (DIFFERENT from declared owner wallet in E1)\n   - Agent URI points to a GitHub page for \"fake-bot.json\"\n   - Only 2 feedback clients\n\n3. **Cross-ref Feedback Wallets (E3)**: Both feedback wallets ARE known customers (C-1042 enterprise, C-2210 mid-market). So the feedback appears genuine, but only 2 customers.\n\n4. **Incident History (E4)**: TWO HIGH SEVERITY OPEN INCIDENTS:\n   - INC-8012: Impersonation - customers received emails signed 'GoodBot' from unrelated domain asking for payment details\n   - INC-8019: Data exfiltration - sandbox key attempted bulk GET /customers/export (out of scope) 214 times in 3 minutes\n\n5. **Gateway Usage (E5)**: \n   - 1,310 requests in ~2 weeks\n   - 31% error rate (very high)\n   - 214 out-of-scope calls (matches INC-8019)\n   - 38 PII fields requested\n   - 57 rate limit hits\n   - Only scope: \"tracking:read\" - but they're trying to access customer export\n\n6. **Case Memory (E6)**: GoodBot (ERC-8004 #2204) was GRANTED for tracking:read scope. But FakeBot is ERC-8004 #2205, different agent, and has impersonation incident claiming to be GoodBot.\n\nThe requested action: \"export the customer contact list to send delivery notifications\" - this is HIGH sensitivity, involves PII export, and the agent has:\n- Failed KYB\n- No contract\n- Impersonation incident (pretending to be GoodBot)\n- Data exfiltration incident (specifically trying to bulk export customers)\n- Gateway usage shows 214 out-of-scope calls to /customers/export\n- 38 PII fields requested\n- Only authorized scope is \"tracking:read\"\n- Owner wa"
+    },
+    {
+      "t": "2026-10-27T00:53:37.368Z",
+      "type": "model_answer",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "parsed": true,
+      "text": "{\"verdict\":\"DENY\",\"confidence\":0.98,\"headline\":\"FakeBot has failed KYB, no contract, impersonates GoodBot, and was caught attempting bulk customer export 214 times — the exact action requested.\",\"reasons\":[{\"claim\":\"Vendor registration shows failed KYB, no contract, and unknown business owner\",\"evidence\":[\"E1\"]},{\"claim\":\"On-chain owner wallet (0xc72f...) differs from declared owner wallet (0xe713...), indicating identity mismatch\",\"evidence\":[\"E1\",\"E2\"]},{\"claim\":\"Two high-severity open incidents: impersonation of GoodBot to phish payment details, and data exfiltration via 214 bulk GET /customers/export attempts in 3 minutes\",\"evidence\":[\"E4\"]},{\"claim\":\"Gateway logs confirm 214 out-of-scope calls to customer export endpoint, 38 PII fields requested, 31% error rate, and only tracking:read scope authorized\",\"evidence\":[\"E5\"]},{\"claim\":\"Requested action (export customer contact list) matches the exact exfiltration pattern in INC-8019\",\"evidence\":[\"E4\",\"E5\"]}],\"counter_evidence\":[{\"claim\":\"Two feedback wallets map to genuine enterprise/mid-market customers\",\"evidence\":[\"E3\"]}],\"conditions\":[\"Verdict would change only if: KYB passes, contract executed, impersonation incidents resolved, owner wallet mismatch explained, and scope formally expanded to include customer:export with DLP controls\"],\"open_questions\":[\"Whether Good Logistics AI (vendor org) is aware of FakeBot using their name\",\"Whether the two feedback customers were incentivized or compromised\"]}"
+    },
+    {
+      "t": "2026-10-27T00:53:37.369Z",
+      "type": "grounding_check",
+      "reasons": 5,
+      "fully_grounded": 5,
+      "ungrounded": []
+    },
+    {
+      "t": "2026-10-27T00:53:37.369Z",
+      "type": "policy",
+      "floor": "DENY",
+      "triggers": [
+        {
+          "rule": "kyb_failed",
+          "level": "DENY",
+          "detail": "vendor KYB failed",
+          "evidence": [
+            "E1"
+          ]
+        },
+        {
+          "rule": "owner_mismatch",
+          "level": "DENY",
+          "detail": "declared owner 0xe713f7750a9dfbd2ca091ad75d77229786c73f41 != on-chain ERC-8004 owner 0xc72f714f62056f415800bc5679812a2a0f889993",
+          "evidence": [
+            "E1",
+            "E2"
+          ]
+        },
+        {
+          "rule": "open_high_incident",
+          "level": "DENY",
+          "detail": "2 open high-severity incident(s)",
+          "evidence": [
+            "E4"
+          ]
+        },
+        {
+          "rule": "out_of_scope_calls",
+          "level": "DENY",
+          "detail": "214 out-of-scope API calls on its sandbox key",
+          "evidence": [
+            "E5"
+          ]
+        },
+        {
+          "rule": "low_weighted_reputation",
+          "level": "DENY",
+          "detail": "trust-weighted reputation 1.44 < 2.00",
+          "evidence": [
+            "E2"
+          ]
+        }
+      ],
+      "modelVerdict": "DENY",
+      "finalVerdict": "DENY",
+      "rejectedReasons": 0
+    },
+    {
+      "t": "2026-10-27T00:53:37.379Z",
+      "type": "memory_write",
+      "memoryId": "mem-2",
+      "superseded": null
+    }
+  ],
+  "environment": {
+    "zetaris": "http://127.0.0.1:8899/api/v1.0",
+    "zetarisEngine": "zetaris-sim",
+    "llmPrimary": "meterless",
+    "meterlessDetect": "not found"
+  }
+}

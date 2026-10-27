@@ -4,4 +4,4 @@ node_modules/
 !.env.example
 .state/
 *.log
-runs/
+/runs/

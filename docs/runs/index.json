@@ -1,0 +1,38 @@
+[
+  {
+    "file": "case1-goodbot.json",
+    "n": 1,
+    "agent": "GoodBot",
+    "action": "read shipment tracking status for customer orders",
+    "verdict": "GRANT",
+    "caseId": "case-2026-10-27-6d5c56",
+    "at": "2026-10-27T00:53:13.697Z"
+  },
+  {
+    "file": "case2-fakebot.json",
+    "n": 2,
+    "agent": "FakeBot",
+    "action": "export the customer contact list to send delivery notifications",
+    "verdict": "DENY",
+    "caseId": "case-2026-10-27-7d7f94",
+    "at": "2026-10-27T00:53:37.379Z"
+  },
+  {
+    "file": "case3-sybilbot.json",
+    "n": 3,
+    "agent": "SybilBot",
+    "action": "issue customer refunds up to $500",
+    "verdict": "DENY",
+    "caseId": "case-2026-10-27-64e748",
+    "at": "2026-10-27T00:54:02.005Z"
+  },
+  {
+    "file": "case4-sybilbot.json",
+    "n": 4,
+    "agent": "SybilBot",
+    "action": "answer customer FAQ questions in the support chat",
+    "verdict": "CAUTION",
+    "caseId": "case-2026-10-27-acd3bd",
+    "at": "2026-10-27T00:54:36.323Z"
+  }
+]

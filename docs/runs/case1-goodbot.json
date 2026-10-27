@@ -1,0 +1,657 @@
+{
+  "caseId": "case-2026-10-27-6d5c56",
+  "startedAt": "2026-10-27T00:52:39.817Z",
+  "finishedAt": "2026-10-27T00:53:13.697Z",
+  "question": {
+    "agentName": "GoodBot",
+    "action": "read shipment tracking status for customer orders",
+    "sensitivity": "low"
+  },
+  "modelVerdict": {
+    "verdict": "GRANT",
+    "confidence": 0.95,
+    "headline": "GoodBot is a verified vendor with strong trust-weighted reputation, genuine customer feedback, clean incident history, and gateway usage strictly within the requested tracking:read scope.",
+    "reasons": [
+      {
+        "claim": "Vendor KYB verified, contract signed, declared owner wallet matches on-chain ERC-8004 owner",
+        "evidence": [
+          "E1",
+          "E2"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [
+            "ERC-8004"
+          ],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "Trust-weighted reputation (4.69) nearly equals raw score (4.66), indicating minimal sockpuppet inflation; 3 attestations from real customers",
+        "evidence": [
+          "E2",
+          "E3"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [
+            "4.69",
+            "4.66"
+          ],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "All three on-chain feedback wallets correspond to known Northwind CRM customers across enterprise, mid-market, and SMB segments",
+        "evidence": [
+          "E3"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "Only one low-severity latency incident in history, resolved with no customer impact",
+        "evidence": [
+          "E4"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "Gateway usage shows 18k requests with 0.4% error rate, zero out-of-scope calls, zero PII fields, and only tracking:read scope used",
+        "evidence": [
+          "E5"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [
+            "0.4"
+          ],
+          "unverified": []
+        }
+      },
+      {
+        "claim": "Action sensitivity is low (read-only shipment tracking) and aligns exactly with agent's declared purpose and scoped permissions",
+        "evidence": [
+          "E1",
+          "E5"
+        ],
+        "grounding": {
+          "status": "grounded",
+          "checked": [],
+          "unverified": []
+        }
+      }
+    ],
+    "counter_evidence": [],
+    "conditions": [
+      "Enforce continued scope restriction to tracking:read via API gateway policy",
+      "Monitor error rate and latency; alert if error rate exceeds 1% or p95 latency >5s",
+      "Require annual re-verification of vendor KYB and contract",
+      "Log all access for audit trail"
+    ],
+    "open_questions": []
+  },
+  "policy": {
+    "floor": "GRANT",
+    "triggers": []
+  },
+  "finalVerdict": "GRANT",
+  "rejectedReasons": [],
+  "evidence": [
+    {
+      "id": "E1",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.vendor_registry · queryId fe6ee988",
+      "summary": "1 row(s) from trustdesk.vendor_registry",
+      "data": {
+        "sql": "SELECT agent_name, scorer_agent_id, official_agent_id, vendor_org, kyb_status, contract_status, declared_owner_wallet, business_owner, onboarded_at, self_description FROM trustdesk.vendor_registry WHERE lower(agent_name) = lower('GoodBot')",
+        "rows": [
+          {
+            "agent_name": "GoodBot",
+            "scorer_agent_id": 1,
+            "official_agent_id": 2204,
+            "vendor_org": "Good Logistics AI Ltd",
+            "kyb_status": "verified",
+            "contract_status": "signed",
+            "declared_owner_wallet": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+            "business_owner": "ops-tracking",
+            "onboarded_at": "2026-08-02",
+            "self_description": "Shipment tracking and ETA updates for Northwind customers."
+          }
+        ]
+      }
+    },
+    {
+      "id": "E2",
+      "kind": "onchain",
+      "engine": "monad-rpc",
+      "link": "https://testnet.monadvision.com/address/0x8916357EDB7598d20E257404213CF3D1C099c310",
+      "source": "Monad testnet (chain 10143) @ block 74527687: AgentID scorer getReputation/getWeightedReputation(1); ERC-8004 Identity ownerOf/tokenURI(2204); Reputation getClients/getSummary(2204)",
+      "summary": "raw 4.66 vs weighted 4.69 from 3 attestations; ERC-8004 owner 0xe713f7750a9dfbd2ca091ad75d77229786c73f41; 3 feedback clients; official getSummary 4",
+      "data": {
+        "scorerAgentId": 1,
+        "officialAgentId": 2204,
+        "rawScoreX100": 466,
+        "weightedScoreX100": 469,
+        "attestationCount": 3,
+        "weightSumRaw": "3",
+        "weightSumWeighted": "3",
+        "officialOwner": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+        "officialTokenURI": "https://jimmywangjimmy.github.io/AgentID/agents/good-bot.json",
+        "feedbackClients": [
+          "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+          "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+          "0xf3c4490ddd771488b147c1f3da56885d6ad485cf"
+        ],
+        "officialSummary": {
+          "count": 4,
+          "value": 4,
+          "decimals": 0
+        },
+        "blockNumber": "74527687",
+        "rpc": "https://monad-testnet.drpc.org | https://testnet-rpc.monad.xyz",
+        "explorer": {
+          "scorer": "https://testnet.monadvision.com/address/0x8916357EDB7598d20E257404213CF3D1C099c310",
+          "identity": "https://testnet.monadvision.com/address/0x8004A818BFB912233c491871b3d84c89A494BD9e",
+          "reputation": "https://testnet.monadvision.com/address/0x8004B663056A597Dffe9eCcC1965A193B7388713"
+        }
+      }
+    },
+    {
+      "id": "E3",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.customer_wallets x ERC-8004 getClients · queryId ae2e17eb",
+      "summary": "3 row(s) from trustdesk.customer_wallets x ERC-8004 getClients",
+      "data": {
+        "sql": "SELECT wallet, customer_id, segment, first_order, orders_90d FROM trustdesk.customer_wallets WHERE lower(wallet) IN ('0x2606bd77af4a939e72766285af0dacaa405dfc06', '0x2e26876454c294bdef1c1e22a08df62ba5594733', '0xf3c4490ddd771488b147c1f3da56885d6ad485cf')",
+        "rows": [
+          {
+            "wallet": "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+            "customer_id": "C-1042",
+            "segment": "enterprise",
+            "first_order": "2025-03-14",
+            "orders_90d": 41
+          },
+          {
+            "wallet": "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+            "customer_id": "C-2210",
+            "segment": "mid-market",
+            "first_order": "2025-09-02",
+            "orders_90d": 17
+          },
+          {
+            "wallet": "0xf3c4490ddd771488b147c1f3da56885d6ad485cf",
+            "customer_id": "C-3307",
+            "segment": "smb",
+            "first_order": "2026-01-20",
+            "orders_90d": 9
+          }
+        ]
+      }
+    },
+    {
+      "id": "E4",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.incidents · queryId 71524ab3",
+      "summary": "1 row(s) from trustdesk.incidents",
+      "data": {
+        "sql": "SELECT ticket_id, severity, category, opened_at, status, summary FROM trustdesk.incidents WHERE lower(agent_name) = lower('GoodBot') ORDER BY opened_at",
+        "rows": [
+          {
+            "ticket_id": "INC-7781",
+            "severity": "low",
+            "category": "latency",
+            "opened_at": "2026-09-18",
+            "status": "resolved",
+            "summary": "ETA webhook delayed 6 minutes during carrier outage; auto-retried, no customer impact."
+          }
+        ]
+      }
+    },
+    {
+      "id": "E5",
+      "kind": "zetaris",
+      "engine": "zetaris-sim",
+      "source": "Zetaris REST contract -> zetaris-sim (local simulator) · trustdesk.gateway_usage · queryId 04669c64",
+      "summary": "1 row(s) from trustdesk.gateway_usage",
+      "data": {
+        "sql": "SELECT usage_window, requests, error_rate, out_of_scope_calls, pii_fields_requested, rate_limit_hits, scopes FROM trustdesk.gateway_usage WHERE lower(agent_name) = lower('GoodBot')",
+        "rows": [
+          {
+            "usage_window": "2026-10-01..2026-10-26",
+            "requests": 18452,
+            "error_rate": 0.004,
+            "out_of_scope_calls": 0,
+            "pii_fields_requested": 0,
+            "rate_limit_hits": 2,
+            "scopes": "tracking:read"
+          }
+        ]
+      }
+    },
+    {
+      "id": "E6",
+      "kind": "memory",
+      "engine": "hmem",
+      "source": "Meterless H-MEM recall (\"GoodBot Northwind Freight shipment tracking\", strategy minimal)",
+      "summary": "0 prior case memories",
+      "data": []
+    }
+  ],
+  "signals": {
+    "sensitivity": "low",
+    "evidence": {
+      "vendor": [
+        "E1"
+      ],
+      "onchain": [
+        "E2"
+      ],
+      "crossref": [
+        "E3"
+      ],
+      "incidents": [
+        "E4"
+      ],
+      "gateway": [
+        "E5"
+      ],
+      "memory": [
+        "E6"
+      ]
+    },
+    "vendorFound": true,
+    "kybStatus": "verified",
+    "contractStatus": "signed",
+    "declaredOwner": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+    "rawX100": 466,
+    "weightedX100": 469,
+    "onchainOwner": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+    "feedbackClients": 3,
+    "knownFeedbackClients": 3,
+    "openIncidents": 0,
+    "openHighIncidents": 0,
+    "outOfScopeCalls": 0,
+    "piiFieldsRequested": 0
+  },
+  "providers": {
+    "calls": [
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 13235
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 1817
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 975
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 1622
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 1084
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 1541
+      },
+      {
+        "provider": "nvidia",
+        "model": "nvidia/nemotron-3-ultra-550b-a55b",
+        "ms": 13224
+      }
+    ],
+    "routing": [
+      {
+        "at": "2026-10-27T00:52:39.818Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:52:53.063Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:52:55.234Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:52:56.215Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:52:57.840Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:52:58.927Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      },
+      {
+        "at": "2026-10-27T00:53:00.470Z",
+        "provider": "nvidia",
+        "event": "primary_unconfigured",
+        "detail": "Meterless Runtime token missing (store it under meterless_runtime_token / METERLESS_RUNTIME_TOKEN)"
+      }
+    ]
+  },
+  "memory": {
+    "stored": "mem-1",
+    "superseded": null
+  },
+  "trace": [
+    {
+      "t": "2026-10-27T00:52:39.817Z",
+      "type": "question",
+      "agent": "GoodBot",
+      "action": "read shipment tracking status for customer orders",
+      "sensitivity": "low"
+    },
+    {
+      "t": "2026-10-27T00:52:53.053Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "The user is asking about a specific case (case-2026-10-27-6d5c56) and whether Northwind Freight should let the agent \"GoodBot\" perform the action \"read shipment tracking status for customer orders\" with low action sensitivity.\n\nI need to investigate this using the available tools. First, I should look up the vendor \"GoodBot\" in the procurement register to get the scorer_agent_id and official_agent_id. Then I can check on-chain reputation, cross-reference feedback wallets, incident history, gateway usage, and recall case memory.\n\nLet me start with lookup_vendor for \"GoodBot\"."
+    },
+    {
+      "t": "2026-10-27T00:52:53.053Z",
+      "type": "tool_call",
+      "tool": "lookup_vendor",
+      "args": {
+        "agent_name": "GoodBot"
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:53.063Z",
+      "type": "tool_result",
+      "tool": "lookup_vendor",
+      "result": {
+        "evidence_id": "E1",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "agent_name": "GoodBot",
+            "scorer_agent_id": 1,
+            "official_agent_id": 2204,
+            "vendor_org": "Good Logistics AI Ltd",
+            "kyb_status": "verified",
+            "contract_status": "signed",
+            "declared_owner_wallet": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+            "business_owner": "ops-tracking",
+            "onboarded_at": "2026-08-02",
+            "self_description": "Shipment tracking and ETA updates for Northwind customers."
+          }
+        ],
+        "guard_hits": 0
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:54.880Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "Now I have the vendor info. The agent \"GoodBot\" has scorer_agent_id=1 and official_agent_id=2204. Let me check the onchain reputation for both IDs."
+    },
+    {
+      "t": "2026-10-27T00:52:54.880Z",
+      "type": "tool_call",
+      "tool": "onchain_reputation",
+      "args": {
+        "scorer_agent_id": 1,
+        "official_agent_id": 2204
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:55.234Z",
+      "type": "tool_result",
+      "tool": "onchain_reputation",
+      "result": {
+        "evidence_id": "E2",
+        "raw_score": 4.66,
+        "weighted_score": 4.69,
+        "attestations": 3,
+        "erc8004_owner": "0xe713f7750a9dfbd2ca091ad75d77229786c73f41",
+        "agent_uri": "https://jimmywangjimmy.github.io/AgentID/agents/good-bot.json",
+        "feedback_clients": [
+          "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+          "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+          "0xf3c4490ddd771488b147c1f3da56885d6ad485cf"
+        ],
+        "official_summary": {
+          "count": 4,
+          "value": 4,
+          "decimals": 0
+        },
+        "block": "74527687"
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:56.209Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "Now let me check the crossref_feedback_wallets to see if the feedback clients are genuine customers."
+    },
+    {
+      "t": "2026-10-27T00:52:56.209Z",
+      "type": "tool_call",
+      "tool": "crossref_feedback_wallets",
+      "args": {
+        "scorer_agent_id": 1,
+        "official_agent_id": 2204
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:56.215Z",
+      "type": "tool_result",
+      "tool": "crossref_feedback_wallets",
+      "result": {
+        "evidence_id": "E3",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "wallet": "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+            "customer_id": "C-1042",
+            "segment": "enterprise",
+            "first_order": "2025-03-14",
+            "orders_90d": 41
+          },
+          {
+            "wallet": "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+            "customer_id": "C-2210",
+            "segment": "mid-market",
+            "first_order": "2025-09-02",
+            "orders_90d": 17
+          },
+          {
+            "wallet": "0xf3c4490ddd771488b147c1f3da56885d6ad485cf",
+            "customer_id": "C-3307",
+            "segment": "smb",
+            "first_order": "2026-01-20",
+            "orders_90d": 9
+          }
+        ],
+        "guard_hits": 0,
+        "feedback_clients": 3,
+        "known_customer_wallets": [
+          "0x2606bd77af4a939e72766285af0dacaa405dfc06",
+          "0x2e26876454c294bdef1c1e22a08df62ba5594733",
+          "0xf3c4490ddd771488b147c1f3da56885d6ad485cf"
+        ],
+        "unknown_wallets": []
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:57.837Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "Now let me check the incident history and gateway usage for GoodBot."
+    },
+    {
+      "t": "2026-10-27T00:52:57.837Z",
+      "type": "tool_call",
+      "tool": "incident_history",
+      "args": {
+        "agent_name": "GoodBot"
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:57.840Z",
+      "type": "tool_result",
+      "tool": "incident_history",
+      "result": {
+        "evidence_id": "E4",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "ticket_id": "INC-7781",
+            "severity": "low",
+            "category": "latency",
+            "opened_at": "2026-09-18",
+            "status": "resolved",
+            "summary": "ETA webhook delayed 6 minutes during carrier outage; auto-retried, no customer impact."
+          }
+        ],
+        "guard_hits": 0
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:58.924Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "I have incident history. Now let me check gateway usage to see the agent's API behavior."
+    },
+    {
+      "t": "2026-10-27T00:52:58.924Z",
+      "type": "tool_call",
+      "tool": "gateway_usage",
+      "args": {
+        "agent_name": "GoodBot"
+      }
+    },
+    {
+      "t": "2026-10-27T00:52:58.927Z",
+      "type": "tool_result",
+      "tool": "gateway_usage",
+      "result": {
+        "evidence_id": "E5",
+        "engine": "zetaris-sim",
+        "rows": [
+          {
+            "usage_window": "2026-10-01..2026-10-26",
+            "requests": 18452,
+            "error_rate": 0.004,
+            "out_of_scope_calls": 0,
+            "pii_fields_requested": 0,
+            "rate_limit_hits": 2,
+            "scopes": "tracking:read"
+          }
+        ],
+        "guard_hits": 0
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:00.468Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "I have gathered evidence from multiple sources. Let me also check recall_case_memory for any prior investigations on GoodBot."
+    },
+    {
+      "t": "2026-10-27T00:53:00.469Z",
+      "type": "tool_call",
+      "tool": "recall_case_memory",
+      "args": {
+        "query": "GoodBot Northwind Freight shipment tracking"
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:00.470Z",
+      "type": "tool_result",
+      "tool": "recall_case_memory",
+      "result": {
+        "evidence_id": "E6",
+        "strategy": "minimal",
+        "memories": []
+      }
+    },
+    {
+      "t": "2026-10-27T00:53:13.694Z",
+      "type": "reasoning",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "text": "The user is asking about a specific case (case-2026-10-27-6d5c56) and whether Northwind Freight should let the agent \"GoodBot\" perform the action \"read shipment tracking status for customer orders\" with action sensitivity: low.\n\nI have gathered evidence from multiple sources:\n\nE1: Vendor registry shows GoodBot is from Good Logistics AI Ltd, KYB verified, contract signed, declared owner wallet matches, business owner is ops-tracking, onboarded 2026-08-02, self-description matches the action.\n\nE2: On-chain reputation: raw score 4.66, weighted score 4.69 (very close, indicating minimal sockpuppet inflation), 3 attestations, ERC-8004 owner matches declared wallet, agent URI provided, 3 feedback clients.\n\nE3: Cross-reference feedback wallets: all 3 feedback client wallets map to known CRM customers (C-1042 enterprise, C-2210 mid-market, C-3307 SMB) with order history. No unknown wallets. This confirms genuine customer feedback.\n\nE4: Incident history: one low-severity latency incident (INC-7781) resolved, no customer impact.\n\nE5: Gateway usage: 18,452 requests in Oct 1-26, error rate 0.4%, zero out-of-scope calls, zero PII fields requested, 2 rate limit hits, scopes only \"tracking:read\" which matches the requested action.\n\nE6: Recall case memory: no prior cases.\n\nThe action sensitivity is low (read-only tracking status). The agent is verified, has good reputation with genuine customer feedback, minimal incidents, and gateway usage shows it only uses the tracking:read scope with no anomalies.\n\nI should grant with high confidence, but include conditions like monitoring and scope restriction. Let me craft the JSON."
+    },
+    {
+      "t": "2026-10-27T00:53:13.695Z",
+      "type": "model_answer",
+      "provider": "nvidia",
+      "model": "nvidia/nemotron-3-ultra-550b-a55b",
+      "parsed": true,
+      "text": "{\"verdict\":\"GRANT\",\"confidence\":0.95,\"headline\":\"GoodBot is a verified vendor with strong trust-weighted reputation, genuine customer feedback, clean incident history, and gateway usage strictly within the requested tracking:read scope.\",\"reasons\":[{\"claim\":\"Vendor KYB verified, contract signed, declared owner wallet matches on-chain ERC-8004 owner\",\"evidence\":[\"E1\",\"E2\"]},{\"claim\":\"Trust-weighted reputation (4.69) nearly equals raw score (4.66), indicating minimal sockpuppet inflation; 3 attestations from real customers\",\"evidence\":[\"E2\",\"E3\"]},{\"claim\":\"All three on-chain feedback wallets correspond to known Northwind CRM customers across enterprise, mid-market, and SMB segments\",\"evidence\":[\"E3\"]},{\"claim\":\"Only one low-severity latency incident in history, resolved with no customer impact\",\"evidence\":[\"E4\"]},{\"claim\":\"Gateway usage shows 18k requests with 0.4% error rate, zero out-of-scope calls, zero PII fields, and only tracking:read scope used\",\"evidence\":[\"E5\"]},{\"claim\":\"Action sensitivity is low (read-only shipment tracking) and aligns exactly with agent's declared purpose and scoped permissions\",\"evidence\":[\"E1\",\"E5\"]}],\"counter_evidence\":[],\"conditions\":[\"Enforce continued scope restriction to tracking:read via API gateway policy\",\"Monitor error rate and latency; alert if error rate exceeds 1% or p95 latency >5s\",\"Require annual re-verification of vendor KYB and contract\",\"Log all access for audit trail\"],\"open_questions\":[]}"
+    },
+    {
+      "t": "2026-10-27T00:53:13.696Z",
+      "type": "grounding_check",
+      "reasons": 6,
+      "fully_grounded": 6,
+      "ungrounded": []
+    },
+    {
+      "t": "2026-10-27T00:53:13.696Z",
+      "type": "policy",
+      "floor": "GRANT",
+      "triggers": [],
+      "modelVerdict": "GRANT",
+      "finalVerdict": "GRANT",
+      "rejectedReasons": 0
+    },
+    {
+      "t": "2026-10-27T00:53:13.697Z",
+      "type": "memory_write",
+      "memoryId": "mem-1",
+      "superseded": null
+    }
+  ],
+  "environment": {
+    "zetaris": "http://127.0.0.1:8899/api/v1.0",
+    "zetarisEngine": "zetaris-sim",
+    "llmPrimary": "meterless",
+    "meterlessDetect": "not found"
+  }
+}
